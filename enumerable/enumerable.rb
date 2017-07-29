@@ -39,12 +39,24 @@ module Enumerable
     elsif type == Hash
       results = {}
       self.my_each do |key, value|
-        results[key] = value if yield(key, value)
+
+        results[key] = value if value != nil && yield(key, value)
       end
     end
 
     return results
   end
+
+  def my_all?
+    unless block_given?
+      return self.my_select { |obj| obj} != {}
+    else
+      test = self.my_select { |key,value| yield(key,value) } if self.class == Hash
+      test = self.my_select { |item| yield(item) } if self.class == Array ||  self.class == Range
+      return test == (self.class == Range ? self.to_a : self)
+    end
+  end
+
 
 
 end
@@ -67,17 +79,46 @@ end
 # [0,5,0,8].each_with_index {|item,index| puts item.to_s + " " +index.to_s}
 # (1..10).each_with_index {|item,index| puts item.to_s + " " + index.to_s}
 #Tests my_select
-puts "my_select"
-a = {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.my_select {|key,value| value.size > 4}
-puts a
-b =  [0,5,0,8].my_select {|number| number > 2}
-puts b
-c =  (1..100).my_select {|number| number % (number**0.5) == 0  }
-puts c
-puts "select"
-a =  {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.select {|key,value| value.size > 4}
-puts a
-b =  [0,5,0,8].select {|number| number > 2}
-puts b
-c = (1..100).select {|number| number % (number**0.5) == 0  }
-puts c
+# puts "my_select"
+# a = {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.my_select {|key,value| value.size > 4}
+# puts a
+# b =  [0,5,0,8].my_select {|number| number > 2}
+# puts b
+# c =  (1..100).my_select {|number| number % (number**0.5) == 0  }
+# puts c
+# puts "select"
+# a =  {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.select {|key,value| value.size > 4}
+# puts a
+# b =  [0,5,0,8].select {|number| number > 2}
+# puts b
+# c = (1..100).select {|number| number % (number**0.5) == 0  }
+# puts c
+# puts "my_all?"
+#  #{green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.my_each {|key , value| puts key.to_s + ": " + value}
+# #puts "next"
+# a = {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.my_all? {|key , value| value.size > 4}
+# puts a
+# a = {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.my_all? {|key , value| value.size > 0}
+# puts a
+# a = [0,1,3,4,5,8].my_all? {|item| item > 2}
+# puts a
+# a = [3,4,5,8].my_all? {|item| item > 2}
+# puts a
+# a = (0..10).my_all? {|item| item > 2}
+# puts a
+# a = (3..10).my_all? {|item| item > 2}
+# puts a
+#
+# puts "all?"
+# a =  {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.all? {|key , value| value.size > 4}
+# puts a
+# a = {green: "00FF00", red: "FF0000", blue: "0000FF", black: "0" }.all? {|key , value| value.size > 0}
+# puts a
+# a = [0,1,3,4,5,8].all? {|item| item > 2}
+# puts a
+# a = [3,4,5,8].all? {|item| item > 2}
+# puts a
+# a = (0..10).all? {|item| item > 2}
+# puts a
+# a = (3..10).all? {|item| item > 2}
+# puts a
