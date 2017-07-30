@@ -71,6 +71,19 @@ module Enumerable
     return !(my_any? {|obj, obj1| yield(obj, obj1)})
   end
 
+  def my_count(target=nil)
+    unless block_given?
+      if target == nil
+        return self.size
+      else
+        return self.my_select {|item| item == target }.size 
+      end
+    else
+      test = self.my_select { |key,value| yield(key,value) } if self.class == Hash
+      test = self.my_select { |item| yield(item) } if self.class == Array ||  self.class == Range
+      return test.size
+    end
+  end
 
 end
 
@@ -152,7 +165,6 @@ end
 # puts [0,1,2,3].any? {|item| item <= 4}
 # puts (0...10).any? { |item| item % 2 == 0 }
 # puts (1...10).any? { |item| item % 13 == 0 }
-
 #Tests for my_none?
 # puts "my_none?"
 # puts ({white: "FFFFFF"}).my_none? { | key, value| value.size ===0 }
@@ -169,3 +181,18 @@ end
 # puts [0,1,2,3].none? {|item| item <= 4}
 # puts (0...10).none? { |item| item % 2 == 0 }
 # puts (1...10).none? { |item| item % 13 == 0 }
+#Tests for my_count
+puts "my_count"
+puts ({dogs: 0, cats:2, fish:3}.my_count(2))
+puts ({apes: 0}.my_count)
+puts ({dogs: 0, cats:2, fish:3}.my_count {|key, value| value > 1})
+puts ([0,2,6,4,6,7].my_count(6))
+puts ([0,2,6,4,6,7].my_count {|value| value > 3})
+puts ((2..10).my_count{|number| number >= 4})
+puts "count"
+puts ({dogs: 0, cats:2, fish:3}.count(2))
+puts ({apes: 0}.count)
+puts ({dogs: 0, cats:2, fish:3}.count {|key, value| value > 1})
+puts ([0,2,6,4,6,7].count(6))
+puts ([0,2,6,4,6,7].count {|value| value > 3})
+puts ((2..10).count{|number| number >= 4})
