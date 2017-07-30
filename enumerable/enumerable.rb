@@ -57,11 +57,23 @@ module Enumerable
     end
   end
 
+  def my_any?
+    unless block_given?
+      return self.my_select { |obj| obj} != {}
+    else
+      test = self.my_select { |key,value| yield(key,value) } if self.class == Hash
+      test = self.my_select { |item| yield(item) } if self.class == Array ||  self.class == Range
+      return !(test.empty?)
+    end
+  end
+
+  def my_none?
+    return !(my_any? {|obj, obj1| yield(obj, obj1)})
+  end
 
 
 end
 
-#
 # #Tests my_each
 # # puts "my_each"
 # # {green: "00FF00", red: "FF0000", blue: "0000FF"}.my_each {|key,item| puts key.to_s + item.to_s}
@@ -124,3 +136,36 @@ end
 # # puts a
 # puts ([0,2,3].my_all?)
 # puts ([false,true,true].my_all?)
+#Tests for my_any?
+# puts "my_any?"
+# puts ({white: "FFFFFF"}).my_any? { | key, value| value.size ===0 }
+# puts ({white: "FFFFFF", uv: ""}).my_any? { | key, value| value.size ===0 }
+# puts [0,1,2,3].my_any? {|item| item == 4 }
+# puts [0,1,2,3].my_any? {|item| item <= 4}
+# puts (0...10).my_any? { |item| item % 2 == 0 }
+# puts (1...10).my_any? { |item| item % 13 == 0 }
+#
+# puts "any?"
+# puts ({white: "FFFFFF"}).any? { | key, value| value.size ===0 }
+# puts ({white: "FFFFFF", uv: ""}).any? { | key, value| value.size ===0 }
+# puts [0,1,2,3].any? {|item| item == 4}
+# puts [0,1,2,3].any? {|item| item <= 4}
+# puts (0...10).any? { |item| item % 2 == 0 }
+# puts (1...10).any? { |item| item % 13 == 0 }
+
+#Tests for my_none?
+# puts "my_none?"
+# puts ({white: "FFFFFF"}).my_none? { | key, value| value.size ===0 }
+# puts ({white: "FFFFFF", uv: ""}).my_none? { | key, value| value.size ===0 }
+# puts [0,1,2,3].my_none? {|item| item == 4 }
+# puts [0,1,2,3].my_none? {|item| item <= 4}
+# puts (0...10).my_none? { |item| item % 2 == 0 }
+# puts (1...10).my_none? { |item| item % 13 == 0 }
+#
+# puts "none?"
+# puts ({white: "FFFFFF"}).none? { | key, value| value.size ===0 }
+# puts ({white: "FFFFFF", uv: ""}).none? { | key, value| value.size ===0 }
+# puts [0,1,2,3].none? {|item| item == 4}
+# puts [0,1,2,3].none? {|item| item <= 4}
+# puts (0...10).none? { |item| item % 2 == 0 }
+# puts (1...10).none? { |item| item % 13 == 0 }
