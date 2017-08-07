@@ -54,42 +54,44 @@ class Board
 
   def victory?
     winning_mark = nil
-    #Check all the rows
-    @cells.each do |row|
-      winning_mark = row[0] if row[0] != ' ' && checkMatch?(row)
-    end
 
-    #Check columns
-
-    @cells.size.times do |column|
-      temp_array = []
-      @cells.size.times do |row|
-        temp_array << @cells[row][column]
-      end
-      winning_mark = temp_array[0] if temp_array[0] != ' ' && checkMatch?(temp_array)
-    end
-
-    #Check 1st diagonal
-    temp_array = []
-    @cells.size.times do |ctr|
-      temp_array << @cells[ctr][ctr]
-    end
-    winning_mark = temp_array[0] if temp_array[0] != ' ' && checkMatch?(temp_array)
-
-    #Check 2nd diagonal
-    temp_array = []
-    @cells.size.times do |ctr|
-      temp_array << @cells[ctr][@cells.size - (ctr+1)]
-    end
-    winning_mark = temp_array[0] if temp_array[0] != ' ' && checkMatch?(temp_array)
+    lines { |line| winning_mark = line[0] if line[0] != ' ' && checkMatch?(line) }
 
     return winning_mark
 
   end
 
   def lines
+    #Check all the rows
+    @cells.each do |line|
+      yield(line)
+    end
+    #Check columns
+
+    @cells.size.times do |column|
+      line = []
+      @cells.size.times do |row|
+        line << @cells[row][column]
+      end
+      yield(line)
+    end
+    #Check 1st diagonal
+    line = []
+    @cells.size.times do |ctr|
+      line << @cells[ctr][ctr]
+    end
+    yield(line)
+
+    #Check 2nd diagonal
+    line = []
+    @cells.size.times do |ctr|
+      line << @cells[ctr][@cells.size - (ctr+1)]
+    end
+    yield(line)
 
   end
+
+
   private
   def checkMatch?(line)
     line.max == line.min

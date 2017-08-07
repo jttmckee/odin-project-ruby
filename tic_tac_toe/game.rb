@@ -24,7 +24,7 @@ class Game
           @board.print_board
           playing, waiting = waiting, playing
           puts "It's #{playing.name}'s turn."
-          if playing.name.lcase != "computer"
+          if playing.name.downcase != "computer"
             #Loop until correct input received
             loop do
               puts "Please enter row and column to mark like this 'A1'.\nType 'Q' to exit"
@@ -82,7 +82,13 @@ class Game
   end
 
   def ai_play(player)
-    
+
+    @board.lines do |line|
+      if line.count(player.mark) == 2 && line.count(' ') == 1
+        @board.mark!(row, col, player.mark )
+
+    end
+
     loop do
       row = rand(3)
       col = rand(3)
