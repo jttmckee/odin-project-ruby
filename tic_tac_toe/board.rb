@@ -1,5 +1,5 @@
 class Board
-
+  require_relative 'cell.rb'
   attr_reader :cells
 
   def initialize
@@ -7,7 +7,7 @@ class Board
   end
 
   def reset!
-    @cells = Array.new(3) { Array.new(3,' ') }
+    @cells = Array.new(3) {|row| Array.new(3) { |col| Cell.new(' ', row, col)} }
   end
 
   def print_board
@@ -32,7 +32,7 @@ class Board
             print letter.next! + ' '
           else
             begin
-            print "#{@cells[(row)/2 - 1][(column)/2 - 1]} "
+            print "#{@cells[(row)/2 - 1][(column)/2 - 1].value} "
             rescue
               puts "#{row} #{column}"
             end
@@ -44,8 +44,8 @@ class Board
   end
 
   def mark!(row,column,mark)
-    if @cells[row][column] == ' '
-      @cells[row][column] = mark
+    if @cells[row][column].value == ' '
+      @cells[row][column].value  = mark
       return true
     else
       return false
@@ -55,7 +55,7 @@ class Board
   def victory?
     winning_mark = nil
 
-    lines { |line| winning_mark = line[0] if line[0] != ' ' && checkMatch?(line) }
+    lines { |line| winning_mark = line[0].value if line[0].value != ' ' && checkMatch?(line) }
 
     return winning_mark
 
@@ -94,7 +94,7 @@ class Board
 
   private
   def checkMatch?(line)
-    line.max == line.min
+    line.inject(true) {|memo, cell| memo = (line[0].value == cell.value)}
   end
 
 end
