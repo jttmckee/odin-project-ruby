@@ -1,0 +1,3 @@
+class MyArgumentError < ArgumentError
+
+end
