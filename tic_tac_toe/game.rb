@@ -83,11 +83,15 @@ class Game
 
   def ai_play(player)
 
-    # @board.lines do |line|
-    #   if line.count(player.mark) == 2 && line.count(' ') == 1
-    #     @board.mark!(row, col, player.mark )
-    #   end
-    # end
+    @board.lines do |line|
+      if line.count {|cell| cell.value == player.mark} == 2 &&
+        line.count {|cell| cell.value == ' '} == 1
+          blank_cell = line.select {|cell| cell.value == ' '}[0]
+          @board.mark!(blank_cell.row, blank_cell.column, player.mark )
+
+          return
+      end
+    end
 
     loop do
       row = rand(3)

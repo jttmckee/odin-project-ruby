@@ -94,7 +94,7 @@ class Board
 
   private
   def checkMatch?(line)
-    line.inject(true) {|memo, cell| memo = (line[0].value == cell.value)}
+    line.inject(true) {|memo, cell| memo = (memo && line[0].value == cell.value)}
   end
 
 end
