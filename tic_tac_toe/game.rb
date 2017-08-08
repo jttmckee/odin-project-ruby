@@ -8,9 +8,8 @@ class Game
   def initialize
 
 
-
+    reset!
     @board = Board.new
-
     puts "Welcome to Jason's Tic-Tac-Toe Game"
     @player1 = create_player(1, 'X')
     @player2 = create_player(2, 'O')
@@ -21,6 +20,7 @@ class Game
     loop do
       #Each turn one loop
       until victory?
+        break if @turns >= @board.cells.size**2
           @board.print_board
           playing, waiting = waiting, playing
           puts "It's #{playing.name}'s turn."
@@ -44,10 +44,10 @@ class Game
           else
             ai_play(playing)
           end
-
+          @turns += 1
       end
       @board.print_board
-      puts "The winner is #{@winner.name}!"
+      puts @winner ?  "The winner is #{@winner.name}!" : "It's a tie!"
       puts "Time to play another game.  Type 'Q' to exit, enter to continue"
 
       exit if 'Q' == gets.chomp
@@ -79,10 +79,12 @@ class Game
 
   def reset!
     @winner = nil
+    @turns = 0
   end
 
   def ai_play(player)
 
+    #Look for any two in a rows to be completed.
     @board.lines do |line|
       if line.count {|cell| cell.value == player.mark} == 2 &&
         line.count {|cell| cell.value == ' '} == 1
@@ -93,6 +95,19 @@ class Game
       end
     end
 
+    #Look for any two in a rows that belong to the other player.  Block them
+    @board.lines do |line|
+      if line.count {|cell| cell.value != player.mark && cell.value != ' '} == 2 &&
+        line.count {|cell| cell.value == ' '} == 1
+          blank_cell = line.select {|cell| cell.value == ' '}[0]
+          @board.mark!(blank_cell.row, blank_cell.column, player.mark )
+
+          return
+      end
+    end
+
+
+    #If all else fails pick a random free square
     loop do
       row = rand(3)
       col = rand(3)
