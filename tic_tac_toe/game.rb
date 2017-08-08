@@ -101,6 +101,10 @@ class Game
     end
 
 
+
+
+
+
     #Look for any two in a rows to be completed.
     @board.lines do |line|
       if line.count {|cell| cell.value == player.mark} == 2 &&
@@ -134,6 +138,7 @@ class Game
       end
     end
     unless potential_cells.empty?
+
       #Find the cells that match, i.e. more than one cell in potential cells
       useable_cells = potential_cells.select do |cell|
         potential_cells.count(cell) > 1
@@ -141,12 +146,18 @@ class Game
       end
 
       if useable_cells.size > 0
+
         blank_cell = useable_cells.sample
         @board.mark!(blank_cell.row, blank_cell.column, player.mark )
         return
       end
     end
 
+    #Go for the centre if possible
+    if @board.cells[1][1].value == ' '
+      @board.mark!(1,1, player.mark )
+      return
+    end
 
     #If all else fails pick a random free square
     loop do
