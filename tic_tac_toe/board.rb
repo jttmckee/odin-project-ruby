@@ -91,7 +91,16 @@ class Board
 
   end
 
-
+  def corners
+    corners = []
+    @cells.each do |cell_row|
+    corners +=  cell_row.select do |cell|
+          (cell.row == 0 || cell.row == cells.size - 1) &&
+          (cell.column == 0 || cell.column == cells.size - 1)
+      end
+    end
+    return corners
+  end
   private
   def checkMatch?(line)
     line.inject(true) {|memo, cell| memo = (memo && line[0].value == cell.value)}

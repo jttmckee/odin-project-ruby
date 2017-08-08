@@ -83,6 +83,23 @@ class Game
   end
 
   def ai_play(player)
+    #First turn - go to one of the corners
+    if @turns == 0
+      @board.mark!(rand(2) * 2, rand(2) * 2, player.mark )
+
+      return
+    end
+    #Second turn - if player has taken corner, take centre, otherwise corner
+    if @turns == 1
+      if @board.corners.any? {|cell| cell.value != ' '}
+        @board.mark!(1,1, player.mark )
+        return
+      else
+        @board.mark!(rand(2) * 2, rand(2) * 2, player.mark )
+        return
+      end
+    end
+
 
     #Look for any two in a rows to be completed.
     @board.lines do |line|
@@ -103,6 +120,30 @@ class Game
           @board.mark!(blank_cell.row, blank_cell.column, player.mark )
 
           return
+      end
+    end
+
+    #Look for any lines with one mark and two blanks and check if any of them cross
+    potential_cells = []
+    useable_cells = []
+    @board.lines do |line|
+      if line.count {|cell| cell.value == player.mark} == 1 &&
+        line.count {|cell| cell.value == ' '} == 2
+        potential_cells += line.select {|cell| cell.value == ' '}
+
+      end
+    end
+    unless potential_cells.empty?
+      #Find the cells that match, i.e. more than one cell in potential cells
+      useable_cells = potential_cells.select do |cell|
+        potential_cells.count(cell) > 1
+
+      end
+
+      if useable_cells.size > 0
+        blank_cell = useable_cells.sample
+        @board.mark!(blank_cell.row, blank_cell.column, player.mark )
+        return
       end
     end
 
