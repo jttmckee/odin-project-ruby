@@ -6,46 +6,70 @@ class Hangman
 
   end
 
-  def printLetters(word, letters)
+  def printLetters(word)
+    print "\n"
+    (5 - @lives).times do |i|
+      puts @scaffold[i]
+    end
+    puts "\n"
+
     print "WORD:"
     word.each_char do |chr|
-      print letters.include?(chr) ? chr : '_'
+      print @letters.include?(chr) ? chr : '_'
       print ' '
     end
-    print "\n"
+
+  end
+
+  def setup
+    @lives = 5
+    @scaffold = []
+    @scaffold << "     --------"
+    @scaffold << "        |"
+    @scaffold << "        O"
+    @scaffold << "       -|-"
+    @scaffold << "       / \\"
+    @letters = []
+
   end
 
 
   def initialize
-    lives = 5
-    letters = []
+    setup
+    incorrect_letters = []
     words = File.readlines('5desk.txt')
     word = ""
+    letter = ""
     until (word.size <= 11 && word.size >= 5)
       word = words[rand(words.size)].chomp.upcase
     end
-    printLetters(word, letters)
     hasWon = false
 
-    until (lives<=0 || hasWon)
-      letter = getLetter
+    until (@lives<=0 || hasWon)
+      printLetters(word)
+       loop do
+         letter = getLetter
 
-      until letter =~ /[A-Z]/
-        puts "That's not a letter!"
-        letter = getLetter
+        if incorrect_letters.include?(letter) or @letters.include?(letter)
+          puts "You already guessed that letter."
+        elsif letter =~ /[A-Z]/
+          break
+        else
+          puts "That's not a letter!"
+        end
       end
 
       puts "You guessed \"#{letter}\""
       if word.include? letter
         puts "That's right! Well done..."
-        letters << letter
-        if word.split('').all? {|chr| letters.include?(chr)} then hasWon = true end
+        @letters << letter
+        if word.split('').all? {|chr| @letters.include?(chr)} then hasWon = true end
       else
-        puts "That's wrong!"
-        lives -= 1
+        @lives -= 1
+        puts "That's wrong! You have #{@lives} lives left."
+        incorrect_letters << letter
 
       end
-      printLetters(word, letters)
 
     end
 
@@ -60,5 +84,6 @@ class Hangman
 
 
 end
+
 
 a = Hangman.new
