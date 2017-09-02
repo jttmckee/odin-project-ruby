@@ -11,7 +11,7 @@ end
 # All 3 fibs_rec below do the same thing.  The first one is more readable and is
 # efficient.  The second two are showing it can be done in 2 or 1 lines.
 # The last one is showing you one line less than 80 characters long.
-# The last one takes MUCH longer to run so isn't recommended for higher values!
+# The last two take MUCH longer to run so aren't recommended for higher values!
 def fibs_rec(n)
   if n <= 2 then return n == 2  ? [0,1] : [0] end
   a = fibs_rec(n-1)
