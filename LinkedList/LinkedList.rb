@@ -4,7 +4,7 @@ class LinkedList
   attr_accessor :head_node
 
   def append(node)
-    unless node.is_a? Node then node = Node.new(node) end
+    node = make_node(node)
     if @head_node
       @head_node.get_tail_node.next_node = node
     else
@@ -12,5 +12,48 @@ class LinkedList
     end
   end
 
+  def prepend(node)
+    node = make_node(node)
+    if @head_node
+      node.next_node = @head_node
+      @head_node = node
+    else
+      @head_node = node
+    end
+  end
+
+  def size
+    @head_node.count
+  end
+
+  def head
+    @head_node
+  end
+
+  def tail
+    @head_node ? @head_node.get_tail_node : nil
+  end
+
+  def at(index)
+    @head_node ? @head_node.at(index) : nil
+  end
+
+  def pop
+    unless @head_node then return nil end
+    if @head_node.next_node
+      @head_node.get_penultimate_node.remove_instance_variable(:@next_node)
+    else
+      remove_instance_variable(:@head_node)
+    end
+
+  end
+
+
+  private
+  def make_node(object)
+   node = (object.is_a? Node) ? object : Node.new(object)
+   node.next_node = nil
+   node
+  end
 
 end
