@@ -48,6 +48,27 @@ class LinkedList
 
   end
 
+  def contains?(value)
+    find(value) != nil
+  end
+
+  def find(data)
+    @head_node ? @head_node.find(data, 0) : nil
+  end
+
+  def to_s
+    @head_node ? @head_node.to_s : "() -> nil"
+  end
+
+  def insert_at(object, index)
+    node = make_node(object)
+    if index <= 0
+      node.next_node = @head_node
+      @head_node = node
+    else
+      @head_node ? @head_node.insert_at(node,index) : nil
+    end
+  end
 
   private
   def make_node(object)

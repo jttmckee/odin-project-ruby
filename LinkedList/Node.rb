@@ -17,6 +17,7 @@ class Node
     @next_node.next_node ? @next_node.get_penultimate_node : self
   end
 
+
   def at(index)
     if index == 0
        self
@@ -24,4 +25,32 @@ class Node
       @next_node ?  @next_node.at(index - 1) : nil
     end
   end
+
+  def find(data,counter)
+    if data == @value
+      counter
+    else
+        @next_node ? @next_node.find(data, counter+1) : nil
+    end
+
+  end
+
+  def to_s
+    "(#{value}) -> " + (@next_node ? @next_node.to_s : "nil")
+  end
+
+  def insert_at(node,index)
+
+    if index == 1
+      node.next_node = @next_node
+      @next_node = node
+    elsif @next_node == nil
+      return nil
+    else
+      @next_node.insert_at(node, index - 1)
+    end
+
+
+  end
+
 end
