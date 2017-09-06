@@ -70,6 +70,20 @@ class LinkedList
     end
   end
 
+  def remove_at(index)
+    if index <= 0
+      if @head_node
+        @head_node, return_value = @head_node.next_node, @head_node
+        return_value.value
+      else
+        nil
+      end
+    else
+      @head_node ? @head_node.remove_at(index) : nil
+    end
+
+  end
+
   private
   def make_node(object)
    node = (object.is_a? Node) ? object : Node.new(object)

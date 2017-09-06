@@ -49,8 +49,18 @@ class Node
     else
       @next_node.insert_at(node, index - 1)
     end
+  end
 
+  def remove_at(index)
 
+    if @next_node == nil
+      return nil
+    elsif index == 1
+      @next_node, return_value = @next_node.next_node, @next_node
+      return_value.value
+    else
+      @next_node.remove_at( index - 1)
+    end
   end
 
 end
