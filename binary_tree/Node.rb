@@ -8,7 +8,6 @@ class Node
   def child_node=(object)
     if object == nil then return end
     node = make_node(object)
-    puts "child_node= called on #{value} with object #{node.value}"
     if node.value <= @value
       if @left_node
         @left_node.child_node = node
@@ -32,7 +31,6 @@ class Node
 
   def parent_node=(object)
     node  = make_node(object)
-    puts "Parent node = called on #{self.value} with object #{node.value}"
     if node.has_child(self)
       if @parent_node && !@parent_node.has_child(node)
         @parent_node.child_node = node
@@ -47,20 +45,35 @@ class Node
   def has_child(node)
     @left_node == node || @right_node == node
   end
+
   private
   def make_node(object)
      node = ( (object.is_a? Node ) ? object : Node.new(object) )
     node
   end
+
+
 end
 
 
 def build_tree(array)
   node = Node.new(array[0])
-  puts "New build tree #{array[0]}"
   array[1..-1].shuffle.each do |element|
-    puts "iteration with #{element}"
     node.child_node = element
   end
   node
+end
+
+def breadth_first_search(node,value)
+  queue = [node]
+  loop do
+    if queue.empty? then return nil end
+    check_node = queue.pop
+    puts "Checking #{check_node.value} "
+    if value == check_node.value then return check_node end
+    if check_node.left_node then queue.unshift check_node.left_node end
+    if check_node.right_node then queue.unshift check_node.right_node end
+
+  end
+
 end
