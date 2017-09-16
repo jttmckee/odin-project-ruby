@@ -46,6 +46,19 @@ class Node
     @left_node == node || @right_node == node
   end
 
+  def dfs_rec(value)
+    puts "Checking #{@value}"
+    if @value == value then return self end
+    if @left_node
+      return_value = @left_node.dfs_rec(value)
+      if return_value != nil then return return_value end
+    end
+    if @right_node
+      return_value = @right_node.dfs_rec(value)
+      if return_value != nil then return return_value end
+    end
+    return nil
+  end
 
   private
   def make_node(object)
@@ -86,6 +99,7 @@ def depth_first_search(node,value)
   next_node =  node
   loop do
     if next_node
+      puts "Checking #{next_node.value}"
       if next_node.value == value then return next_node end
       if next_node.right_node then stack.push next_node.right_node end
       if next_node.left_node
