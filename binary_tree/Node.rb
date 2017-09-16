@@ -46,6 +46,7 @@ class Node
     @left_node == node || @right_node == node
   end
 
+
   private
   def make_node(object)
      node = ( (object.is_a? Node ) ? object : Node.new(object) )
@@ -54,6 +55,7 @@ class Node
 
 
 end
+
 
 
 def build_tree(array)
@@ -75,5 +77,30 @@ def breadth_first_search(node,value)
     if check_node.right_node then queue.unshift check_node.right_node end
 
   end
+
+end
+
+
+def depth_first_search(node,value)
+  stack = []
+  next_node =  node
+  loop do
+    if next_node
+      if next_node.value == value then return next_node end
+      if next_node.right_node then stack.push next_node.right_node end
+      if next_node.left_node
+        next_node = next_node.left_node
+      else
+        next_node = stack.pop
+      end
+    elsif stack.empty?
+      return nil
+    else
+      next_node = stack.pop
+    end
+
+
+  end
+
 
 end
