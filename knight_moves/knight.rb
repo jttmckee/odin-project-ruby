@@ -5,17 +5,17 @@ class Knight
   attr_accessor :board
 
   def initialize(x=0,y=0)
-    @x = x
-    @y = y
+    @x , @y = x , y
   end
 
   def legal_moves
     moves = [ [@x-2,@y-1],[@x-2,@y+1],[@x+2,@y-1],[@x+2,@y+1],
               [@x-1,@y+2],[@x-1,@y-2],[@x+1,@y+2],[@x+1,@y-2]]
     moves.select! do |pos|
+
       @board[pos[0],pos[1]]
     end
-
+    moves
   end
 
 
@@ -38,6 +38,14 @@ class Knight
     board[position[0],position[1]]
   end
 
+
+  def position=(position)
+    @x, @y = position
+  end
+
+  def position
+    [@x,@y]
+  end
 
 
 end
